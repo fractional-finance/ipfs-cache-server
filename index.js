@@ -1,8 +1,9 @@
 import express from "express";
 import JSONdb from "simple-json-db";
-import { IPFSClient } from "./ipfs";
+import IPFSClient from "./ipfs.js";
 
 const app = express();
+app.use(express.json());
 const db = JSONdb("./database.json");
 const ipfsClient = new IPFSClient();
 const port = 3000;
@@ -15,8 +16,11 @@ app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
-app.get("/ipfs", async (req, res) => {
-  const hashes = req.body.hashes; // Array of IPFS CID paths
+app.post("/ipfs", async (req, res) => {
+  console.log(req.query);
+  console.log(db);
+  const hashes = req.query.hashes; // Array of IPFS CID paths
+  console.log(hashes);
   let values = [];
 
   for (let i = 0; i < hashes.length; i++) {

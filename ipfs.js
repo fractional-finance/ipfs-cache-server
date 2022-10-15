@@ -1,14 +1,16 @@
 import { create } from "ipfs-http-client";
+import * as dotenv from 'dotenv'
+dotenv.config();
 
 const getIpfsAuthHeader = () => {
-  if (!process.env.VUE_APP_PROJECT_ID)
+  if (!process.env.PROJECT_ID)
     throw new Error("PROJECT_ID not set in environment variables");
-  if (!process.env.VUE_APP_PROJECT_SECRET)
+  if (!process.env.PROJECT_SECRET)
     throw new Error("PROJECT_SECRET not set in environment variables");
   return (
     "Basic " +
     Buffer.from(
-      process.env.VUE_APP_PROJECT_ID + ":" + process.env.VUE_APP_PROJECT_SECRET
+      process.env.PROJECT_ID + ":" + process.env.PROJECT_SECRET
     ).toString("base64")
   );
 };
