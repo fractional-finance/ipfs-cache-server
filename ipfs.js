@@ -1,4 +1,5 @@
 import { create } from "ipfs-http-client";
+import { postRequest } from "./network.js";
 import * as dotenv from 'dotenv'
 dotenv.config();
 
@@ -42,14 +43,14 @@ class IPFSClient {
       };
 
       let data = {};
-      network
-        .postRequest(url, params, headers, data)
-        .then((res) => {
-          resolve(res.value || null);
-        })
-        .catch((err) => {
-          resolve(null);
-        });
+        postRequest(url, params, headers, data)
+          .then((res) => {
+            console.log(res);
+            resolve(res || null);
+          })
+          .catch((err) => {
+            resolve(null);
+          });
     });
 }
 

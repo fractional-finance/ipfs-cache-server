@@ -4,33 +4,36 @@ import IPFSClient from "./ipfs.js";
 
 const app = express();
 app.use(express.json());
-const db = JSONdb("./database.json");
+const db = new JSONdb("./database.json", {});
 const ipfsClient = new IPFSClient();
 const port = 3000;
-
-// db.get(key)
-
-// db.set(key, value)
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
+const fetchPath = async (path) => {
+    const fetchedIpfsFile = JSON.stringify(await ipfsClient.getFile(path));
+    db.set(path, fetchedIpfsFile);
+    return fetchedIpfsFile;
+} 
+
 app.post("/ipfs", async (req, res) => {
-  console.log(req.query);
-  console.log(db);
   const hashes = req.query.hashes; // Array of IPFS CID paths
   console.log(hashes);
   let values = [];
 
   for (let i = 0; i < hashes.length; i++) {
+    console.log(hashes[i]);
     const value = db.get(hashes[i]);
-    if (!value) {
-      const fetchedIpfsFile = await ipfsClient.getFile(hashes[i]);
-      db.set(hashes[i], fetchedIpfsFile);
-      values[i] = fetchedIpfsFile;
+    if (!value || value === null) {
+        try{
+          values[i] = await fetchPath(hashes[i])
+        } catch(e) {
+            console.log(e);
+        }
     } else {
-      values[i] = value;
+        values[i] = value;
     }
   }
 
