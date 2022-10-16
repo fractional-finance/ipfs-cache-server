@@ -1,6 +1,6 @@
 import { create } from "ipfs-http-client";
 import { postRequest } from "./network.js";
-import * as dotenv from 'dotenv'
+import * as dotenv from "dotenv";
 dotenv.config();
 
 const getIpfsAuthHeader = () => {
@@ -43,14 +43,14 @@ class IPFSClient {
       };
 
       let data = {};
-        postRequest(url, params, headers, data)
-          .then((res) => {
-            console.log(res);
-            resolve(res || null);
-          })
-          .catch((err) => {
-            resolve(null);
-          });
+      postRequest(url, params, headers, data)
+        .then((res) => {
+          console.log(res);
+          resolve(res || null);
+        })
+        .catch((err) => {
+          resolve(null);
+        });
     });
 }
 
