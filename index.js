@@ -2,6 +2,12 @@ import express from "express";
 import IPFSClient from "./ipfs/ipfs.js";
 import { createClient } from "redis";
 
+const client = createClient();
+
+client.on("error", (err) => console.log("Redis Client Error", err));
+
+await client.connect();
+
 const app = express();
 app.use(express.json());
 const ipfsClient = new IPFSClient();
